@@ -21,7 +21,7 @@ This project demonstrates **real-world distributed system design patterns on mob
 - 📊 Lightweight UI optimized for high-frequency updates
 
 
-## 🧱 Prject Flow
+## 🧱 Project Flow
 Sensors → WebSocket → App Queue → Store → UI
 ↓
 Offline Queue
@@ -46,7 +46,6 @@ Sync on reconnect
 
 ### 1. Initialize Project
 
-```bash
 npx react-native init GreenHouseGuard --template react-native-template-typescript
 cd GreenHouseGuard
 
@@ -120,13 +119,6 @@ src/
 - Extendable to SQLite for durability
 
 ---
-
-## 📌 Trade-offs
-
-### ✔ Pros
-- High-performance ingestion
-- Simple architecture
-- Easy to extend (MQTT / Cloud sync)
 
 ## 📌 Scaling Strategy (Future)
 
