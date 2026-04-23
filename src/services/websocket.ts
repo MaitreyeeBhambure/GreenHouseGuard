@@ -27,7 +27,7 @@ export const connectWS = () => {
 
   ws.onmessage = (event) => {
     const msg = JSON.parse(event.data);
-    // handleMessage(msg);
+     handleMessage(msg);
   };
 
   ws.onclose = () => {
@@ -77,7 +77,7 @@ const isValidMessage = (msg: any) => {
 
 // --- Apply a single, in-order message ---
 const applyMessage = (m: any) => {
-  const { setSeq, updateSensors, addEvent } = useStore.getState();
+  const { setSeq, updateSensors, addEvent } = useStore.getState() as any;
 
   // Update store/UI
   updateSensors(m.data);
@@ -103,16 +103,17 @@ const applyMessage = (m: any) => {
 
 // --- Flush buffer in order ---
 const flushBuffer = () => {
-  const { lastSeq } = useStore.getState();
+  const { lastSeq } = useStore.getState() as any;
 
   // Sort by sequence
   reorderBuffer.sort((a, b) => a.seq - b.seq);
 
   let progressed = false;
+  let currentSeq = lastSeq;
 
   while (reorderBuffer.length) {
     const next = reorderBuffer[0];
-    const expected = useStore.getState().lastSeq + 1;
+    const expected = currentSeq + 1;
 
     if (next.seq === expected) {
       reorderBuffer.shift(); // FIFO remove
@@ -126,7 +127,7 @@ const flushBuffer = () => {
   // If buffer is too big or we’re stuck → resync
   if (!progressed && reorderBuffer.length > 0) {
     const head = reorderBuffer[0];
-    const expected = useStore.getState().lastSeq + 1;
+    const expected = lastSeq + 1;
 
     if (head.seq > expected) {
       gapCount++;
@@ -154,7 +155,7 @@ const scheduleFlush = () => {
 // =======================================================
 
 export const handleMessage = (raw: any) => {
-  const { lastSeq, setSeq, updateSensors } = useStore.getState();
+  const { lastSeq, setSeq, updateSensors } = useStore.getState() as any;
 
   // 1) Parse safely if needed
   let msg = raw;
