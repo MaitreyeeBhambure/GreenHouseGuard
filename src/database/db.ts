@@ -50,3 +50,23 @@ export const insertAnomaly = (event: { reason: string; timestamp: number }) => {
     );
   });
 };
+
+export const insertQueue = (
+  type: string,
+  payload: any
+): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx: any) => {
+      tx.executeSql(
+        `INSERT INTO queue (type, payload, createdAt, attempts)
+         VALUES (?, ?, ?, ?)`,
+        [
+          type,
+          JSON.stringify(payload), // store as string
+          Date.now(),
+          0, // initial attempts
+        ],
+      );
+    });
+  });
+};

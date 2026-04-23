@@ -1,6 +1,9 @@
 import { useStore } from '../store/useStore';
 import { detectAnomaly } from "./anomaly";
-import { insertReading, insertAnomaly } from "../database/db";
+import { insertReading, insertAnomaly,insertQueue } from "../database/db";
+
+
+const MAX_RETRIES = 5;
 
 let ws: WebSocket;
 let retry = 0;
@@ -223,4 +226,18 @@ export const handleMessage = (raw: any) => {
   if (reorderBuffer.length) {
     scheduleFlush();
   }
+};
+
+
+export const retryQueueItem = async (item: any) => {
+  const attempts = (item.attempts || 0) + 1;
+
+  if (attempts > MAX_RETRIES) {
+    console.warn("Max retry reached. Dropping item:", item);
+    return;
+  }
+
+  console.log(`Retrying item (attempt ${attempts})`);
+
+  await insertQueue(item.type, item.payload);
 };

@@ -1,4 +1,5 @@
 import { upload } from "./uploadService";
+import { retryQueueItem } from "./websocket";
 
 let queue: any[] = [];
 
@@ -14,6 +15,7 @@ export const processQueue = async () => {
       await upload(item);
       queue.shift(); // remove only if success
     } catch (error) {
+      await retryQueueItem(item);          // reinsert with attempts
       console.log("Retry later...");
       break; // stop processing on failure
     }
