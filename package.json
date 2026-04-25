@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/netinfo": "^12.0.1",
+    "@react-native/gradle-plugin": "^0.73.4",
     "@react-native/new-app-screen": "0.85.2",
     "react": "19.2.3",
     "react-native": "0.85.2",
